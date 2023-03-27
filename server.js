@@ -29,19 +29,22 @@ mongoose.connect(
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
 const cargoRoutes = require('./routes/cargo')
+const upload = require('./routes/upload')
 
 //app midllewares
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 if(process.env.NODE_ENV = 'development'){
-    app.use(cors({origin: `http://localhost:3000`}));
+    app.use(cors({origin: [`http://localhost:3000`,`http://localhost:5173`]}));
 }
+
 
 //midlewares
 app.use('/api', authRoutes); 
 app.use('/api', userRoutes);
 app.use('/api', cargoRoutes);
+app.use('/api', upload);
 
 
 const port = process.env.PORT || 5000

@@ -37,10 +37,9 @@ const cargoSchema = new mongoose.Schema(
             required: true
         },
         location: {
-            type: [
-                String
-            ],
+            type: String
         },
+        type: [String],
         cargo_status: {
             type: String,
             default: 'REQUIESTED'

@@ -98,7 +98,7 @@ exports.signin = (req, res) => {
                 error: 'User with that email does not exist. Please signup'
             });
         }
-        
+        console.log(user, password)
         // authenticate
         if (!user.authenticate(password)) {
             return res.status(400).json({
