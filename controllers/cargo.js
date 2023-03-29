@@ -26,8 +26,8 @@ exports.findOne = (req, res) => {
     }
 
     exports.Cargoadd = (req, res) => {
-        const { cargo_name, email, phone_number, logo, cover_image, address, cargo_status, overview } = req.body
-        const cargo = new Cargo({ cargo_name, email, phone_number, logo, cover_image, address, cargo_status, overview });
+        const { cargo_name, email, phone_number, logo, cover_image, address, cargo_status, overview, website } = req.body
+        const cargo = new Cargo({ cargo_name, email, phone_number, logo, cover_image, address, cargo_status, overview, website });
         cargo.save((err, cargo) => {
             if (err) {
                 console.log(err)
@@ -98,6 +98,32 @@ exports.findOne = (req, res) => {
                     });
                 }
                 res.json(updatedUser);
+            });
+        });
+       
+    };
+
+
+
+    exports.cargoTypeUpdate = (req, res) => {
+        const { cargo_status } = req.body;
+    
+        Cargo.findOne({ _id: req.params.id }, (err, user) => {
+            if (err || !user) {
+                return res.status(400).json({
+                    error: 'Cargo not found'
+                });
+            }else{
+                user.cargo_status = cargo_status;
+            }
+    
+            user.save((err, updatedUser) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: 'Cargo update failed'
+                    });
+                }
+                res.status(200).json({message: "Амжилттай баталгаажууллаа"});
             });
         });
        

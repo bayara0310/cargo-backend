@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router()
 
 //import controllers
-const { Cargoadd, cargoUpdate, cargoAll, CargoFindType, CargoFindStatus, findOne, findDashboard } = require('../controllers/cargo');
+const { Cargoadd, cargoUpdate, cargoAll, CargoFindType, CargoFindStatus, findOne, findDashboard, cargoTypeUpdate } = require('../controllers/cargo');
 const { runValidation } = require('../validators');
 const { cargoSignupValidator } = require('../validators/cargo');
 
@@ -12,5 +12,6 @@ router.get('/cargo/all', cargoAll);
 router.post('/cargo/status', CargoFindStatus);
 router.post('/cargo/type', CargoFindType);
 router.get('/cargo/:id', findOne);
+router.post('/cargo/status/update/:id', cargoTypeUpdate)
 
 module.exports = router;
