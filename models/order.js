@@ -40,10 +40,10 @@ const orderSchema = new mongoose.Schema(
             type: Date,
         },
         userid: {
-            type: Number,
+            type: String,
         },
         cargoid: {
-            type: Number,
+            type: String,
         },
     },
     { timestamps: true }

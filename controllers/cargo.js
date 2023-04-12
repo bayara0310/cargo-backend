@@ -1,4 +1,6 @@
 const Cargo = require('../models/cargo');
+const Comment = require('../models/comment');
+const User = require('../models/user');
 
 exports.findOne = (req, res) => {
     const cargoId = req.params.id;
@@ -39,6 +41,8 @@ exports.findOne = (req, res) => {
         });
     }
 
+    //filter gsen vg
+
     exports.CargoFindType = (req, res) => {
         const status = req.body.cargo_status;
         const type = req.body.type;
@@ -57,8 +61,7 @@ exports.findOne = (req, res) => {
 
     exports.CargoFindStatus = (req, res) => {
         const status = req.body.cargo_status;
-        console.log(req.body);
-        Cargo.find({ cargo_status: status}, (err, cargo)=>{
+        Cargo.find({ cargo_status: status}, (err, cargo)=> {
             if(err){
                 return res.json(err)
             }
@@ -105,7 +108,7 @@ exports.findOne = (req, res) => {
 
 
 
-    exports.cargoTypeUpdate = (req, res) => {
+    exports.cargoStatusUpdate = (req, res) => {
         const { cargo_status } = req.body;
     
         Cargo.findOne({ _id: req.params.id }, (err, user) => {
@@ -124,6 +127,103 @@ exports.findOne = (req, res) => {
                     });
                 }
                 res.status(200).json({message: "Амжилттай баталгаажууллаа"});
+            });
+        });
+       
+    };
+
+
+    //comment heseg
+
+    exports.CommentAdd = (req, res) => {
+        const { userid, comment, cargoid, ip } = req.body
+        const cargo = new Comment({ userid, comment, cargoid, ip });
+        cargo.save((err, cargo) => {
+            if (err) {
+                console.log(err)
+            }
+            return res.json({
+                message: 'Амжилттай илгээлээ',
+                data: cargo
+            }).status(200);
+        });
+    }
+
+    exports.commentCargoOne = (req, res) => {
+        const id = req.params.id;
+        Comment.find({ cargoid: id}, (err, cargo)=> {
+            console.log(cargo.userid, "cargo")
+            if(err){
+                return res.json(err)
+            }
+            return res.json({
+                cargo
+            })
+        })
+    }
+
+    exports.commentUserOne = (req, res) => {
+        const id = req.params.id;
+        User.findOne({ _id: id}, (err, user)=> {
+            if(err){
+                return res.json(err)
+            }
+            return res.json({
+                user
+            })
+        })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       //filters type
+
+       exports.CargoFindType = (req, res) => {
+        const status = req.body.cargo_status;
+        const type = req.body.type;
+        if(!status){
+           return res.json("status")
+        }
+        Cargo.find({ cargo_status: status, type: {$all: type}}, (err, cargo)=>{
+            if(err){
+                return res.json(err)
+            }
+            return res.json({
+                cargo
+            })
+        })
+        }
+
+    exports.cargoTypeUpdate = (req, res) => {
+        const { type } = req.body;
+    
+        Cargo.findOne({ _id: req.params.id }, (err, user) => {
+            if (err || !user) {
+                return res.status(400).json({
+                   error: 'Cargo not found'
+                });
+            }else{
+                user.type = type;
+            }
+    
+            user.save((err, updatedUser) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: 'Cargo update failed'
+                    });
+                }
+                res.status(200).json({message: "Амжилттай оруулсан"});
             });
         });
        

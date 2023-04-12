@@ -68,6 +68,7 @@ exports.accountActivation = (req, res) => {
             const { name, email, password } = jwt.decode(token);
 
             const user = new User({ name, email, password });
+            console.log(user)
 
             user.save((err, user) => {
                 if (err) {

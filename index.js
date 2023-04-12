@@ -18,18 +18,13 @@ mongoose.connect(
     .then(() => console.log('DB connected'))
     .catch(err => console.log('DB ERROR', err));
 
-// mongoose.set('strictQuery', true);
-// mongoose.connect(process.env.DATABASE, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   connectTimeoutMS: 5000
-// });
-
 //import routes
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
 const cargoRoutes = require('./routes/cargo')
 const upload = require('./routes/upload')
+const order = require('./routes/order')
+const adminRoutes = require('./routes/admin')
 
 //app midllewares
 app.use(morgan('dev'));
@@ -45,6 +40,8 @@ app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', cargoRoutes);
 app.use('/api', upload);
+app.use('/api', order);
+app.use('/api', adminRoutes);
 
 
 const port = process.env.PORT || 5000

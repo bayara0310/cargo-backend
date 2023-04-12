@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
  
-const userSchema = new mongoose.Schema(
+const adminSchema = new mongoose.Schema(
     {
-        name: {
+        username: {
             type: String,
             trim: true,
             required: true,
@@ -23,31 +23,32 @@ const userSchema = new mongoose.Schema(
         salt: String,
         role: {
             type: String,
-            default: 'subscriber'
+            default: 'Admin'
         },
         resetPasswordLink: {
             data: String,
             default: ''
-        }
+        },
+        cargoid:{
+            type: String
+        },
     },
     { timestamps: true }
 );
  
-userSchema
+adminSchema
     .virtual('password')
     .set(function(password) {
-        // create a temporarity variable called _password
+        console.log("password", password);
         this._password = password;
-        // generate salt
         this.salt = this.makeSalt();
-        // encryptPassword
         this.hashed_password = this.encryptPassword(password);
     })
     .get(function() {
-        return this.hashed_password;
+        return this._password;
     });
- 
-userSchema.methods = {
+
+adminSchema.methods = {
     authenticate: function(plainText) {
         return this.encryptPassword(plainText) === this.hashed_password;
     },
@@ -56,8 +57,8 @@ userSchema.methods = {
         if (!password) return '';
         try {
             return crypto
-                .createHmac('sha1', this.salt)
-                .update(password)
+                .createHmac('sha256', this.salt)
+                .update(password.toString())
                 .digest('hex');
         } catch (err) {
             return '';
@@ -69,4 +70,4 @@ userSchema.methods = {
     }
 };
  
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Admin', adminSchema);

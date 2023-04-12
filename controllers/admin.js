@@ -1,20 +1,35 @@
-const User = require('../models/user')
+const Admin = require('../models/admin')
 const jwt = require('jsonwebtoken')
 const nodemailer = require("nodemailer");
 const _ = require('lodash')
 const { expressjwt: jwts } = require("express-jwt");
 
-exports.signup = (req, res) => {
-    const { name, email, password } = req.body;
 
-    User.findOne({ email }).exec((err, user) => {
+
+exports.findOneCargoAdmin = (req, res) => {
+    const cargoId = req.params.id;
+    console.log(cargoId);
+    Admin.findById(cargoId).exec((err, user) => {
+        if (err || !user) {
+            return res.status(400).json({
+                error: 'Cargo not found'
+            });
+        }
+        res.json(user);
+    });
+};
+
+exports.signup = (req, res) => {
+    const { username, email, password, cargoid } = req.body;
+
+    Admin.findOne({ email }).exec((err, user) => {
         if (user) {
             return res.status(400).json({
                 error: 'Email is taken'
             });
         }
 
-        const token = jwt.sign({ name, email, password }, process.env.JWT_ACCOUNT_ACTIVATION, { expiresIn: '10m' });
+        const token = jwt.sign({ username, email, password, cargoid }, process.env.JWT_ACCOUNT_ACTIVATION, { expiresIn: '10m' });
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -29,10 +44,10 @@ exports.signup = (req, res) => {
             to: email,
             subject: `Account activation link`,
             html: `
-                <h1>Please use the following link to activate your account</h1>
-                <p>${process.env.CLIENT_URL}/activate/${token}</p>
+                <h1>Таны каргогоо бүртгүүлэх хүсэлтийг зөвшөөрлөө </h1>
+                <p>${process.env.CLIENT_URL}/authentication/activate/${token}</p>
                 <hr />
-                <p>This email may contain sensetive information</p>
+                <p>Энэ линкээр орж бүртгэлээ баталгаажуулна уу</p>
                 <p>${process.env.CLIENT_URL}</p>
             `
           };
@@ -45,12 +60,13 @@ exports.signup = (req, res) => {
             });
             } else {
                 return res.json({
-                    message: `Таны имейл хаягруу ${email} баталгаажуулах код илгээлээ. Check the email address !`
+                    message: `И-мейл хаягруу нь  ${email} илгээлээ.`
                 });
             }
           });
     });
 };
+
 
 
 exports.accountActivation = (req, res) => {
@@ -65,9 +81,9 @@ exports.accountActivation = (req, res) => {
                 });
             }
 
-            const { name, email, password } = jwt.decode(token);
+            const { username, email, password, cargoid } = jwt.decode(token);
 
-            const user = new User({ name, email, password });
+            const user = new Admin({ username, email, password, cargoid });
 
             user.save((err, user) => {
                 if (err) {
@@ -76,9 +92,45 @@ exports.accountActivation = (req, res) => {
                         error: 'Error saving user in database. Try signup again'
                     });
                 }
-                return res.json({
-                    message: 'Signup success. Please signin.'
-                });
+
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user: 'bayarsuren0310@gmail.com',
+                      pass: 'gnwewurklsrjyqng'
+                    }
+                  });
+                
+                  const mailOptions = {
+                    from: 'bayarsuren0310@gmail.com',
+                    to: email,
+                    subject: `Амжилттай баталгаажлаа`,
+                    html: `
+                        <h1>E_CARGO.MN -д тавтай морилно уу  </h1>
+                        <p>${user.username}</p>
+                        <hr />
+                        <p>Нэвтрэх нэр</p>
+                        <p>${user.email}</p>
+                        <p>Нууц үг</p>
+                        <p>${password}</p>
+                        <p>Нэвтэрч орсны дараа нууц үгээ заавал солино уу !</p>
+                    `
+                  };
+        
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                      console.log(error);
+                      return res.json({
+                        message: error.message
+                    });
+                    } else {
+                        return res.json({
+                            message: 'Амжилттай.'
+                        });
+                    }
+                  });
+
+               
             });
         });
     } else {
@@ -91,14 +143,15 @@ exports.accountActivation = (req, res) => {
 
 exports.signin = (req, res) => {
     const { email, password } = req.body;
+    console.log(req.body)
     // check if user exist
-    User.findOne({ email }).exec((err, user) => {
+    Admin.findOne({ email }).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: 'User with that email does not exist. Please signup'
             });
         }
-        console.log(user, password)
+        
         // authenticate
         if (!user.authenticate(password)) {
             return res.status(400).json({
@@ -107,11 +160,11 @@ exports.signin = (req, res) => {
         }
         // generate a token and send to client
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        const { _id, name, email, role } = user;
+        const { _id, name, email, role, cargoid } = user;
 
         return res.json({
             token,
-            user: { _id, name, email, role } 
+            user: { _id, name, email, role, cargoid } 
         });
     });
 };
@@ -124,7 +177,7 @@ exports.requireSignin = jwts({
 exports.forgotPassword = (req, res) => {
     const { email } = req.body;
 
-    User.findOne({ email }, (err, user) => {
+    Admin.findOne({ email }, (err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: 'User with that email does not exist'
@@ -222,3 +275,4 @@ exports.resetPassword = (req, res) => {
         });
     }
 };
+

@@ -2,10 +2,13 @@ const express = require('express');
 const router = express.Router()
 
 //import controllers
-const { Cargoadd, cargoUpdate } = require('../controllers/cargo');
-const { runValidation } = require('../validators');
-const { cargoSignupValidator } = require('../validators/cargo');
+const { OrderAdd, FindUserOrderAll, findCargoOrderGet, findOneOrder, OrderTypeUpdate, OrderUpdateImage } = require('../controllers/order');
 
-router.post('/cargo/add',cargoSignupValidator,runValidation, );
+router.post('/order/add', OrderAdd );
+router.get('/order/user/:id', FindUserOrderAll);
+router.get('/order/:id', findCargoOrderGet);
+router.get('/order/detail/:id', findOneOrder)
+router.post('/order/type/:id', OrderTypeUpdate);
+router.post('/order/image/:id', OrderUpdateImage)
 
 module.exports = router;
