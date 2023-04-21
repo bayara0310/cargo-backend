@@ -45,6 +45,9 @@ const orderSchema = new mongoose.Schema(
         cargoid: {
             type: String,
         },
+        trackCode: {
+            type: String,
+        },
     },
     { timestamps: true }
 );

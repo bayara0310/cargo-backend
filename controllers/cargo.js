@@ -173,6 +173,18 @@ exports.findOne = (req, res) => {
             })
         })
     }
+    
+    exports.commentFindUser = (req, res) => {
+        const id = req.params.id;
+        Comment.find({ userid: id}, (err, user)=> {
+            if(err){
+                return res.json(err)
+            }
+            return res.json({
+                user
+            })
+        })
+    }
 
 
 
@@ -228,3 +240,77 @@ exports.findOne = (req, res) => {
         });
        
     };
+
+
+    exports.cargoNationUpdate = (req, res) => {
+        const { nation } = req.body;
+    
+        Cargo.findOne({ _id: req.params.id }, (err, user) => {
+            if (err || !user) {
+                return res.status(400).json({
+                   error: 'Cargo not found'
+                });
+            }else{
+                user.nation = nation;
+            }
+    
+            user.save((err, updatedUser) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: 'Cargo update failed'
+                    });
+                }
+                res.status(200).json({message: "Амжилттай оруулсан"});
+            });
+        });
+       
+    };
+
+    exports.cargoFilterNationtype = (req, res) => {
+        const { nation, type } = req.body ;
+        console.log(req.body)
+        
+        if (nation.length === 0 && type.length === 0) {
+            console.log("a")
+            Cargo.find({ cargo_status: "APPROVED"}, (err, cargo)=> {
+                if(err){
+                    return res.json(err)
+                }
+                return res.json({
+                    cargo
+                })
+            })
+        }
+
+        if(nation.length && type.length > 0){
+            Cargo.find({ nation: {$all: nation}, type: {$all: type}, cargo_status: "APPROVED"}, (err, cargo)=>{
+                if(err){
+                    return res.json(err)
+                }
+                return res.json({
+                    cargo
+                })
+            })
+        }
+        else if(nation.length > 0){
+            Cargo.find({ nation: {$all: nation}, cargo_status: "APPROVED"}, (err, cargo)=>{
+                if(err){
+                    return res.json(err)
+                }
+                return res.json({
+                    cargo
+                })
+            })
+        }
+        else if(type.length > 0){
+            Cargo.find({ type: {$all: type}, cargo_status: "APPROVED"}, (err, cargo)=>{
+                if(err){
+                    return res.json(err)
+                }
+                return res.json({
+                    cargo
+                })
+            })
+        }
+        
+    }

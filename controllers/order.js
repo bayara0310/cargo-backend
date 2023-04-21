@@ -1,4 +1,5 @@
 const Order = require('../models/order');
+const { BARAA } = require('../types');
 
     exports.OrderAdd = (req, res) => {
         const { type, link, cargoid, color, size, price, date, userid, number } = req.body
@@ -30,15 +31,74 @@ const Order = require('../models/order');
 
     exports.findCargoOrderGet = (req, res) => {
         const cargoid  = req.params.id;
-        Order.find({cargoid: cargoid}, (err, order) =>{
-         if(err){
-             console.log(err)
-             return res.json(err)
-         }
-         return res.json({
-             order
-         })
-        })
+        const type = req.body.type;
+
+        if(type === 1){
+            Order.find({cargoid: cargoid}, (err, order) =>{
+                if(err){
+                    console.log(err)
+                    return res.json(err)
+                }
+                return res.json({
+                    order
+                })
+            })
+        }
+        if(type === 2){
+            Order.find({cargoid: cargoid, status: "REGISTERED"}, (err, order) =>{
+                if(err){
+                    console.log(err)
+                    return res.json(err)
+                }
+                return res.json({
+                    order
+                })
+            })
+        }
+        if(type === 3){
+            Order.find({cargoid: cargoid, status: "APPROVED"}, (err, order) =>{
+                if(err){
+                    console.log(err)
+                    return res.json(err)
+                }
+                return res.json({
+                    order
+                })
+            })
+        }
+        if(type === 4){
+            Order.find({cargoid: cargoid, status: "RECEIVED"}, (err, order) =>{
+                if(err){
+                    console.log(err)
+                    return res.json(err)
+                }
+                return res.json({
+                    order
+                })
+            })
+        }
+        if(type === 5){
+            Order.find({cargoid: cargoid, status: "CAME"}, (err, order) =>{
+                if(err){
+                    console.log(err)
+                    return res.json(err)
+                }
+                return res.json({
+                    order
+                })
+            })
+        }
+        if(type === 6){
+            Order.find({cargoid: cargoid, status: "CONFIRM"}, (err, order) =>{
+                if(err){
+                    console.log(err)
+                    return res.json(err)
+                }
+                return res.json({
+                    order
+                })
+            })
+        }
      }
 
      exports.findOneOrder = (req, res) => {
@@ -82,7 +142,7 @@ const Order = require('../models/order');
     };
 
     exports.OrderUpdateImage = (req, res) => {
-        const { image, invoice, status } = req.body;
+        const { image, invoice, status, track } = req.body;
     
         Order.findOne({ _id: req.params.id }, (err, user) => {
             if (err || !user) {
@@ -93,6 +153,7 @@ const Order = require('../models/order');
                 user.invoice = invoice;
                 user.image = image;
                 user.status = status;
+                user.trackCode = track;
             }
     
             user.save((err, updatedUser) => {
@@ -106,3 +167,44 @@ const Order = require('../models/order');
         });
        
     };
+
+    exports.OrderFilter = (req, res) => {
+        const {status, id} = req.body;
+
+        if(status === false){
+            Order.find({userid: id}, (err, cargo)=> {
+                if(err){
+                    return res.json(err)
+                }
+                return res.json({
+                    cargo
+                })
+            })
+           }
+
+        if(status && id){
+            Order.find({userid: id, status: status}, (err, cargo)=> {
+                if(err){
+                    return res.json(err)
+                }
+                return res.json({
+                    cargo
+                })
+            })
+        }
+
+    }
+
+    //search heseg
+
+    exports.OrderSearch = (req, res) => {
+        const query = req.params.id;
+        Order.find({ trackCode: {$regex: query }}, (err, data) => {
+            if(err){
+                return res.json(err)
+            }
+            return res.json({
+                data
+            }) 
+        })
+    }

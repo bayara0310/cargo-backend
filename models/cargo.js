@@ -40,6 +40,8 @@ const cargoSchema = new mongoose.Schema(
             type: String
         },
         type: [String],
+        nation: [String],
+
         cargo_status: {
             type: String,
             default: 'REQUIESTED'
