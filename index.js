@@ -25,6 +25,7 @@ const cargoRoutes = require('./routes/cargo')
 const upload = require('./routes/upload')
 const order = require('./routes/order')
 const adminRoutes = require('./routes/admin')
+const ratingRoutes = require('./routes/rating')
 
 //app midllewares
 app.use(morgan('dev'));
@@ -42,7 +43,7 @@ app.use('/api', cargoRoutes);
 app.use('/api', upload);
 app.use('/api', order);
 app.use('/api', adminRoutes);
-
+app.use('/api', ratingRoutes)
 
 const port = process.env.PORT || 5000
 app.listen(port, () => {
