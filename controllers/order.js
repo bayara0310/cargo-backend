@@ -30,7 +30,7 @@ const { BARAA } = require('../types');
     }
 
     exports.findCargoOrderGet = (req, res) => {
-        const cargoid  = req.params.id;
+        const cargoid  = req.body.id;
         const type = req.body.type;
 
         if(type === 1){
@@ -208,3 +208,18 @@ const { BARAA } = require('../types');
             }) 
         })
     }
+
+    
+    exports.SearchOrderAdmin = (req, res) => {
+        const {search, id} = req.body;
+        console.log(search)
+        Order.find({ type: {$regex: search }, cargoid:id}, (err, order) => {
+            if(err){
+                return res.json(err)
+            }
+            return res.json({
+                order
+            }) 
+        })
+    }
+

@@ -35,7 +35,7 @@ exports.signup = (req, res) => {
             service: 'gmail',
             auth: {
               user: 'bayarsuren0310@gmail.com',
-              pass: 'gnwewurklsrjyqng'
+              pass: 'gtotrarwdiuagkpt'
             }
           });
         
@@ -97,7 +97,7 @@ exports.accountActivation = (req, res) => {
                     service: 'gmail',
                     auth: {
                       user: 'bayarsuren0310@gmail.com',
-                      pass: 'gnwewurklsrjyqng'
+                      pass: 'gtotrarwdiuagkpt'
                     }
                   });
                 
@@ -192,7 +192,7 @@ exports.forgotPassword = (req, res) => {
             service: 'gmail',
             auth: {
               user: 'bayarsuren0310@gmail.com',
-              pass: 'gnwewurklsrjyqng'
+              pass: 'gtotrarwdiuagkpt'
             }
           });
         
