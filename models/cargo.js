@@ -41,6 +41,7 @@ const cargoSchema = new mongoose.Schema(
         },
         type: [String],
         nation: [String],
+        sites: [String],
 
         cargo_status: {
             type: String,

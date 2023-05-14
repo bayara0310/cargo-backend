@@ -1,4 +1,5 @@
 const Order = require('../models/order');
+const User = require('../models/user');
 const { BARAA } = require('../types');
 
     exports.OrderAdd = (req, res) => {
@@ -34,76 +35,210 @@ const { BARAA } = require('../types');
         const type = req.body.type;
 
         if(type === 1){
-            Order.find({cargoid: cargoid}, (err, order) =>{
-                if(err){
-                    console.log(err)
-                    return res.json(err)
+            Order.find({ cargoid: cargoid })
+            .populate('userid')
+            .exec((err, orders) => {
+                if (err) {
+                console.error(err);
+                return res.json(err);
                 }
-                return res.json({
-                    order
+
+                // Fetch user data for each order
+                const orderPromises = orders.map((order) => {
+                return User.findById(order.userid).exec();
+                });
+
+                Promise.all(orderPromises)
+                .then((users) => {
+                    const ordersWithUserData = orders.map((order, index) => {
+                    return {
+                        order: order,
+                        user: users[index]
+                    };
+                    });
+
+                    return res.json({
+                    orders: ordersWithUserData
+                    });
                 })
-            })
+                .catch((error) => {
+                    console.error('Failed to fetch user data:', error);
+                    return res.json(error);
+                });
+            });
         }
         if(type === 2){
-            Order.find({cargoid: cargoid, status: "REGISTERED"}, (err, order) =>{
-                if(err){
-                    console.log(err)
-                    return res.json(err)
+            Order.find({cargoid: cargoid, status: "REGISTERED"})
+            .populate('userid')
+            .exec((err, orders) => {
+                if (err) {
+                console.error(err);
+                return res.json(err);
                 }
-                return res.json({
-                    order
+
+                // Fetch user data for each order
+                const orderPromises = orders.map((order) => {
+                return User.findById(order.userid).exec();
+                });
+
+                Promise.all(orderPromises)
+                .then((users) => {
+                    const ordersWithUserData = orders.map((order, index) => {
+                    return {
+                        order: order,
+                        user: users[index]
+                    };
+                    });
+
+                    return res.json({
+                    orders: ordersWithUserData
+                    });
                 })
-            })
+                .catch((error) => {
+                    console.error('Failed to fetch user data:', error);
+                    return res.json(error);
+                });
+            });
         }
         if(type === 3){
-            Order.find({cargoid: cargoid, status: "APPROVED"}, (err, order) =>{
-                if(err){
-                    console.log(err)
-                    return res.json(err)
+            Order.find({cargoid: cargoid, status: "APPROVED"})
+            .populate('userid')
+            .exec((err, orders) => {
+                if (err) {
+                console.error(err);
+                return res.json(err);
                 }
-                return res.json({
-                    order
+
+                // Fetch user data for each order
+                const orderPromises = orders.map((order) => {
+                return User.findById(order.userid).exec();
+                });
+
+                Promise.all(orderPromises)
+                .then((users) => {
+                    const ordersWithUserData = orders.map((order, index) => {
+                    return {
+                        order: order,
+                        user: users[index]
+                    };
+                    });
+
+                    return res.json({
+                    orders: ordersWithUserData
+                    });
                 })
-            })
+                .catch((error) => {
+                    console.error('Failed to fetch user data:', error);
+                    return res.json(error);
+                });
+            });
         }
         if(type === 4){
-            Order.find({cargoid: cargoid, status: "RECEIVED"}, (err, order) =>{
-                if(err){
-                    console.log(err)
-                    return res.json(err)
+
+            Order.find({cargoid: cargoid, status: "RECEIVED"})
+            .populate('userid')
+            .exec((err, orders) => {
+                if (err) {
+                console.error(err);
+                return res.json(err);
                 }
-                return res.json({
-                    order
+
+                // Fetch user data for each order
+                const orderPromises = orders.map((order) => {
+                return User.findById(order.userid).exec();
+                });
+
+                Promise.all(orderPromises)
+                .then((users) => {
+                    const ordersWithUserData = orders.map((order, index) => {
+                    return {
+                        order: order,
+                        user: users[index]
+                    };
+                    });
+
+                    return res.json({
+                    orders: ordersWithUserData
+                    });
                 })
-            })
+                .catch((error) => {
+                    console.error('Failed to fetch user data:', error);
+                    return res.json(error);
+                });
+            });
         }
         if(type === 5){
-            Order.find({cargoid: cargoid, status: "CAME"}, (err, order) =>{
-                if(err){
-                    console.log(err)
-                    return res.json(err)
+            
+            Order.find({cargoid: cargoid, status: "CAME"})
+            .populate('userid')
+            .exec((err, orders) => {
+                if (err) {
+                console.error(err);
+                return res.json(err);
                 }
-                return res.json({
-                    order
+
+                // Fetch user data for each order
+                const orderPromises = orders.map((order) => {
+                return User.findById(order.userid).exec();
+                });
+
+                Promise.all(orderPromises)
+                .then((users) => {
+                    const ordersWithUserData = orders.map((order, index) => {
+                    return {
+                        order: order,
+                        user: users[index]
+                    };
+                    });
+
+                    return res.json({
+                    orders: ordersWithUserData
+                    });
                 })
-            })
+                .catch((error) => {
+                    console.error('Failed to fetch user data:', error);
+                    return res.json(error);
+                });
+            });
+
         }
         if(type === 6){
-            Order.find({cargoid: cargoid, status: "CONFIRM"}, (err, order) =>{
-                if(err){
-                    console.log(err)
-                    return res.json(err)
+            Order.find({cargoid: cargoid, status: "CONFIRM"})
+            .populate('userid')
+            .exec((err, orders) => {
+                if (err) {
+                console.error(err);
+                return res.json(err);
                 }
-                return res.json({
-                    order
+
+                // Fetch user data for each order
+                const orderPromises = orders.map((order) => {
+                return User.findById(order.userid).exec();
+                });
+
+                Promise.all(orderPromises)
+                .then((users) => {
+                    const ordersWithUserData = orders.map((order, index) => {
+                    return {
+                        order: order,
+                        user: users[index]
+                    };
+                    });
+
+                    return res.json({
+                    orders: ordersWithUserData
+                    });
                 })
-            })
+                .catch((error) => {
+                    console.error('Failed to fetch user data:', error);
+                    return res.json(error);
+                });
+            });
         }
      }
 
      exports.findOneOrder = (req, res) => {
         const cargoId = req.params.id;
-        console.log(cargoId, "ids");
         Order.findById(cargoId).exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({
@@ -212,14 +347,37 @@ const { BARAA } = require('../types');
     
     exports.SearchOrderAdmin = (req, res) => {
         const {search, id} = req.body;
-        console.log(search)
-        Order.find({ type: {$regex: search }, cargoid:id}, (err, order) => {
-            if(err){
-                return res.json(err)
+
+        Order.find({ trackCode: {$regex: search }, cargoid:id})
+        .populate('userid')
+        .exec((err, orders) => {
+            if (err) {
+            console.error(err);
+            return res.json(err);
             }
-            return res.json({
-                order
-            }) 
-        })
+
+            // Fetch user data for each order
+            const orderPromises = orders.map((order) => {
+            return User.findById(order.userid).exec();
+            });
+
+            Promise.all(orderPromises)
+            .then((users) => {
+                const ordersWithUserData = orders.map((order, index) => {
+                return {
+                    order: order,
+                    user: users[index]
+                };
+                });
+
+                return res.json({
+                orders: ordersWithUserData
+                });
+            })
+            .catch((error) => {
+                console.error('Failed to fetch user data:', error);
+                return res.json(error);
+            });
+        });
     }
 
