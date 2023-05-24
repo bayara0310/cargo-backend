@@ -6,17 +6,17 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 
 const app = express();
-
+const DATABASE='mongodb+srv://bayarsurendev:02atau1s1qTy0ukl@cluster0.kif9fm4.mongodb.net/?retryWrites=true&w=majority'
 // connect mongodb
 mongoose.set('strictQuery', true);
-mongoose.connect(
-    process.env.DATABASE, {
-        useNewUrlParser:true,
-        // useUnifiedTopology: false,
-        connectTimeoutMS: 2000
-    })
-    .then(() => console.log('DB connected'))
-    .catch(err => console.log('DB ERROR', err));
+mongoose.connect(DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Increase timeout if necessary
+  })
+  .then(() => console.log('DB connected'))
+  .catch(err => console.log('DB ERROR', err));
+  
 
 //import routes
 const authRoutes = require('./routes/auth')
@@ -31,8 +31,9 @@ const sitesRoutes = require('./routes/sites')
 //app midllewares
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+const NODE_ENV= 'development'
 
-if(process.env.NODE_ENV = 'development'){
+if(NODE_ENV == 'development'){
     app.use(cors({origin: [`http://localhost:3000`,`http://localhost:3001`, `https://ecargo.vercel.app`]}));
 }
 
