@@ -9,7 +9,7 @@ const app = express();
 
 // Connect to MongoDB
 mongoose.set('strictQuery', true);
-mongoose.connect(process.env.DATABASE, {
+mongoose.connect('mongodb+srv://bayarsurendev:02atau1s1qTy0ukl@cluster0.kif9fm4.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000, // Increase timeout if necessary
@@ -31,9 +31,9 @@ const sitesRoutes = require('./routes/sites');
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
-if (process.env.NODE_ENV === 'development') {
+// if (process.env.NODE_ENV === 'development') {
   app.use(cors({origin: ['http://localhost:3000', 'http://localhost:3001', 'https://ecargo.vercel.app']}));
-}
+// }
 
 // Middlewares
 app.use('/api', authRoutes);
@@ -46,6 +46,6 @@ app.use('/api', ratingRoutes);
 app.use('/api', sitesRoutes);
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`Server running on por ${port}`);
+app.listen(5000, () => {
+  console.log(`Server running on port`);
 });
